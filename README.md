@@ -14,7 +14,7 @@ Add the package using **Swift Package Manager**:
 2. Enter the repository URL:
 
    ```
-   https://github.com/your-repo/CustomRouting.git
+   https://github.com/dhiman10/CustomRouting.git
    ```
 3. Select the package and add it to your project.
 
