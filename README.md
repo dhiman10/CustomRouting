@@ -1,12 +1,37 @@
-CustomRouting – RouterView Usage
-CustomRouting is a lightweight SwiftUI routing package that enables navigation like push, sheet, fullScreenCover, alerts, and custom modals using a simple and consistent API.
-This guide focuses on how to use RouterView and the routing system.
- 
-✅ Setup
-Wrap your root view inside RouterView. This provides a router object to manage navigation.
-import SwiftUI
-import CustomRouting
+# CustomRouting – RouterView Guide
 
+CustomRouting is a SwiftUI package that makes navigation simple and consistent across your application. It supports push navigation, sheets, full-screen covers, alerts, and custom modals — all managed through a shared Router system.
+
+This README is formatted to display perfectly on GitHub.
+
+---
+
+## 📦 Installation
+
+Add the package using **Swift Package Manager**:
+
+1. In Xcode, go to **File > Add Packages…**
+2. Enter the repository URL:
+
+   ```
+   https://github.com/your-repo/CustomRouting.git
+   ```
+3. Select the package and add it to your project.
+
+Then import it where needed:
+
+```swift
+import CustomRouting
+import SwiftUI
+```
+
+---
+
+## 🚀 Getting Started
+
+Wrap your app's root view inside `RouterView`. This gives you access to the `router`, which handles all navigation actions.
+
+```swift
 @main
 struct MyApp: App {
     var body: some Scene {
@@ -17,13 +42,25 @@ struct MyApp: App {
         }
     }
 }
- 
-🌐 Accessing the Router
-To navigate from any view, access the router via @Environment:
+```
+
+---
+
+## 🌐 Accessing the Router in Views
+
+In any child view, you can access the router using `@Environment`:
+
+```swift
 @Environment(\.router) private var router
- 
-📦 Navigation Methods
-🔹 Push / Sheet / Full-Screen Navigation
+```
+
+---
+
+## 🧭 Navigation Usage
+
+### ✅ Push / Sheet / Full-Screen Navigation
+
+```swift
 router.showScreen(.push) { _ in
     ProfileView()
 }
@@ -36,84 +73,140 @@ router.showScreen(.fullScreenCover) { _ in
     ProfileView()
 }
 
-router.dismissScreen() // Dismiss current screen
- 
-🔹 Alerts & Confirmation Dialogs
-router.showAlert(.alert, title: "Simple Alert", subtitle: "Message", buttons: nil)
+router.dismissScreen() // Dismiss push/sheet/fullScreen
+```
+
+---
+
+### ✅ Alerts & Confirmation Dialogs
+
+```swift
+router.showAlert(
+    .alert,
+    title: "Alert Title",
+    subtitle: "This is a message",
+    buttons: nil
+)
 
 router.showAlert(
     .confirmationDialog,
-    title: "Choose Option",
-    subtitle: "Select one"
-) {
-    AnyView(
-        Group {
-            Button("Option A", action: {})
-            Button("Option B", action: {})
-        }
-    )
-}
+    title: "Choose an Option",
+    subtitle: "Pick one below",
+    buttons: {
+        AnyView(
+            Group {
+                Button("Option 1", action: {})
+                Button("Option 2", action: {})
+            }
+        )
+    }
+)
 
 router.dismissAlert()
- 
-🔹 Custom Modal
+```
+
+---
+
+### ✅ Custom Modals
+
+```swift
 router.showModal(
-    backgroundColor: Color.black.opacity(0.3),
+    backgroundColor: Color.black.opacity(0.5),
     transition: .move(edge: .bottom)
 ) {
-    RoundedRectangle(cornerRadius: 25)
+    RoundedRectangle(cornerRadius: 30)
         .fill(Color.blue)
         .frame(height: 300)
-        .onTapGesture { router.dismissModal() }
+        .onTapGesture {
+            router.dismissModal()
+        }
+        .frame(maxHeight: .infinity, alignment: .bottom)
 }
 
 router.dismissModal()
- 
-📌 Example View
+```
+
+---
+
+## 📄 Example View (ProfileView)
+
+```swift
 struct ProfileView: View {
     @Environment(\.router) private var router
 
     var body: some View {
         List {
-            Button("Push") {
-                router.showScreen(.push) { _ in ProfileView() }
-            }
-            Button("Sheet") {
-                router.showScreen(.sheet) { _ in ProfileView() }
-            }
-            Button("Alert") {
-                router.showAlert(.alert, title: "Hey!", subtitle: "This is an alert")
-            }
-            Button("Show Modal") {
-                router.showModal(
-                    backgroundColor: .black.opacity(0.5),
-                    transition: .move(edge: .bottom)
-                ) {
-                    Text("Tap to dismiss")
-                        .padding()
-                        .background(Color.white)
-                        .onTapGesture { router.dismissModal() }
+            Section(header: Text("Navigation")) {
+                Button("Push") {
+                    router.showScreen(.push) { _ in ProfileView() }
                 }
+                Button("Sheet") {
+                    router.showScreen(.sheet) { _ in ProfileView() }
+                }
+                Button("Full Screen Cover") {
+                    router.showScreen(.fullScreenCover) { _ in ProfileView() }
+                }
+                Button("Dismiss Screen") { router.dismissScreen() }
+            }
+
+            Section(header: Text("Alerts")) {
+                Button("Show Alert") {
+                    router.showAlert(.alert, title: "Hello", subtitle: "This is an alert")
+                }
+                Button("Dismiss Alert") { router.dismissAlert() }
+            }
+
+            Section(header: Text("Modal")) {
+                Button("Show Modal") {
+                    router.showModal(backgroundColor: Color.black.opacity(0.5)) {
+                        Text("Tap to dismiss")
+                            .padding()
+                            .background(Color.white)
+                            .onTapGesture { router.dismissModal() }
+                    }
+                }
+                Button("Dismiss Modal") { router.dismissModal() }
             }
         }
-        .navigationTitle("RouterView Demo")
+        .navigationTitle("Routing Examples")
     }
 }
- 
-🎯 Summary
-Feature	Method
-Push screen	router.showScreen(.push) { View() }
-Sheet	router.showScreen(.sheet)
-FullScreen	router.showScreen(.fullScreenCover)
-Dismiss screen	router.dismissScreen()
-Alert	router.showAlert(.alert, ...)
-Confirmation	router.showAlert(.confirmationDialog, ...)
-Dismiss alert	router.dismissAlert()
-Custom modal	router.showModal(...)
-Dismiss modal	router.dismissModal()
- 
-📄 License
-This project is available under the MIT License.
- 
+```
+
+---
+
+## 📌 Router Summary Table
+
+| Feature             | Method Example                                   |
+| ------------------- | ------------------------------------------------ |
+| Push Navigation     | `router.showScreen(.push) { View() }`            |
+| Sheet               | `router.showScreen(.sheet) { View() }`           |
+| Full Screen Cover   | `router.showScreen(.fullScreenCover) { View() }` |
+| Dismiss Screen      | `router.dismissScreen()`                         |
+| Alert               | `router.showAlert(.alert, ...)`                  |
+| Confirmation Dialog | `router.showAlert(.confirmationDialog, ...)`     |
+| Dismiss Alert       | `router.dismissAlert()`                          |
+| Custom Modal        | `router.showModal(...) { View() }`               |
+| Dismiss Modal       | `router.dismissModal()`                          |
+
+---
+
+## 🧪 Preview Support
+
+```swift
+#Preview {
+    RouterView { _ in
+        ProfileView()
+    }
+}
+```
+
+---
+
+## 📄 License
+
+This package is available under the MIT License. Feel free to use it in your own projects.
+
+---
+
 Enjoy using CustomRouting! 🎉
-<img width="540" height="710" alt="image" src="https://github.com/user-attachments/assets/35e9b9f2-4b89-4fa8-a1da-635e07f3835e" />
